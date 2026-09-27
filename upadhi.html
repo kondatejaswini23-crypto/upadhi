@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upadhi</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #workerForm {
+            background-color: white;
+            padding: 25px;
+            margin-top: 25px;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        textarea {
+            height: 70px;
+        }
+
+        .worker-card {
+            background-color: white;
+            width: 450px;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .worker-card h3 {
+            font-size: 25px;
+            margin-top: 0;
+        }
+
+        .worker-card p {
+            font-size: 16px;
+        }
+
+        .map-button {
+            background-color: #1976d2;
+        }
+
+        .delete-button {
+            background-color: #d32f2f;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <h1>UPADHI</h1>
+
+    <h2>Local Workers: Direct Opportunities</h2>
+
+    <p>Find trusted local workers near you.</p>
+
+
+    <!-- MAIN BUTTONS -->
+
+    <button onclick="findWorkers()">
+        Find a Worker
+    </button>
+
+    <button onclick="showForm()">
+        Register as a Worker
+    </button>
+
+
+    <!-- ========================= -->
+    <!-- WORKER REGISTRATION FORM -->
+    <!-- ========================= -->
+
+    <div id="workerForm" style="display:none;">
+
+        <h2>Worker Registration</h2>
+
+
+        <label>Name:</label><br>
+        <input
+            type="text"
+            id="name"
+            placeholder="Enter your name"
+        >
+        <br><br>
+
+
+        <label>Place:</label><br>
+        <input
+            type="text"
+            id="place"
+            placeholder="Enter your place"
+        >
+        <br><br>
+
+
+        <label>Age:</label><br>
+        <input
+            type="number"
+            id="age"
+            placeholder="Enter your age"
+        >
+        <br><br>
+
+
+        <label>Phone Number:</label><br>
+        <input
+            type="tel"
+            id="phone"
+            placeholder="Enter phone number"
+        >
+        <br><br>
+
+
+        <label>Work / Skill:</label><br>
+        <input
+            type="text"
+            id="skill"
+            placeholder="Eg: Electrician, Welder, Mason"
+        >
+        <br><br>
+
+
+        <label>Experience:</label><br>
+        <input
+            type="number"
+            id="experience"
+            placeholder="Years of experience"
+        >
+        <br><br>
+
+
+        <label>Address:</label><br>
+        <textarea
+            id="address"
+            placeholder="Enter your address"
+        ></textarea>
+        <br><br>
+
+
+        <button onclick="registerWorker()">
+            Register
+        </button>
+
+    </div>
+
+
+    <!-- ================= -->
+    <!-- WORKER LIST -->
+    <!-- ================= -->
+
+    <div id="workerList" style="display:none;">
+
+        <h2>Available Workers</h2>
+
+        <div id="workersContainer"></div>
+
+    </div>
+
+
+    <!-- ================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================= -->
+
+    <script>
+
+
+        // SHOW REGISTRATION FORM
+
+        function showForm() {
+
+            document.getElementById("workerForm").style.display = "block";
+
+            document.getElementById("workerList").style.display = "none";
+
+        }
+
+
+
+        // REGISTER WORKER
+
+        function registerWorker() {
+
+            let name =
+                document.getElementById("name").value;
+
+            let place =
+                document.getElementById("place").value;
+
+            let age =
+                document.getElementById("age").value;
+
+            let phone =
+                document.getElementById("phone").value;
+
+            let skill =
+                document.getElementById("skill").value;
+
+            let experience =
+                document.getElementById("experience").value;
+
+            let address =
+                document.getElementById("address").value;
+
+
+            // CHECK EMPTY FIELDS
+
+            if (
+                name === "" ||
+                place === "" ||
+                age === "" ||
+                phone === "" ||
+                skill === "" ||
+                experience === "" ||
+                address === ""
+            ) {
+
+                alert("Please fill all the details.");
+
+                return;
+
+            }
+
+
+            // CREATE WORKER OBJECT
+
+            let worker = {
+
+                name: name,
+
+                place: place,
+
+                age: age,
+
+                phone: phone,
+
+                skill: skill,
+
+                experience: experience,
+
+                address: address
+
+            };
+
+
+            // GET OLD WORKERS
+
+            let workers =
+                JSON.parse(localStorage.getItem("workers")) || [];
+
+
+            // ADD NEW WORKER
+
+            workers.push(worker);
+
+
+            // SAVE WORKERS
+
+            localStorage.setItem(
+                "workers",
+                JSON.stringify(workers)
+            );
+
+
+            alert("Worker registered successfully!");
+
+
+            // CLEAR FORM
+
+            document.getElementById("name").value = "";
+
+            document.getElementById("place").value = "";
+
+            document.getElementById("age").value = "";
+
+            document.getElementById("phone").value = "";
+
+            document.getElementById("skill").value = "";
+
+            document.getElementById("experience").value = "";
+
+            document.getElementById("address").value = "";
+
+
+            // HIDE FORM
+
+            document.getElementById("workerForm").style.display = "none";
+
+        }
+
+
+
+        // FIND WORKERS
+
+        function findWorkers() {
+
+            document.getElementById("workerForm").style.display = "none";
+
+            document.getElementById("workerList").style.display = "block";
+
+
+            let workers =
+                JSON.parse(localStorage.getItem("workers")) || [];
+
+
+            let container =
+                document.getElementById("workersContainer");
+
+
+            container.innerHTML = "";
+
+
+            // NO WORKERS
+
+            if (workers.length === 0) {
+
+                container.innerHTML =
+                    "<p>No workers registered yet.</p>";
+
+                return;
+
+            }
+
+
+            // DISPLAY EACH WORKER
+
+            workers.forEach(function(worker, index) {
+
+
+                let card =
+                    document.createElement("div");
+
+                card.className = "worker-card";
+
+
+                card.innerHTML = `
+
+                    <h3>${worker.name}</h3>
+
+                    <p>
+                        <b>Work / Skill:</b>
+                        ${worker.skill}
+                    </p>
+
+                    <p>
+                        <b>Age:</b>
+                        ${worker.age}
+                    </p>
+
+                    <p>
+                        <b>Place:</b>
+                        ${worker.place}
+                    </p>
+
+                    <p>
+                        <b>Experience:</b>
+                        ${worker.experience} Years
+                    </p>
+
+                    <p>
+                        <b>Contact Number:</b>
+                        ${worker.phone}
+                    </p>
+
+                    <p>
+                        <b>Address:</b>
+                        ${worker.address}
+                    </p>
+
+                    <button
+                        class="map-button"
+                        onclick="openMap('${worker.address}, ${worker.place}')"
+                    >
+                        📍 View Location on Map
+                    </button>
+
+                    <button
+                        class="delete-button"
+                        onclick="deleteWorker(${index})"
+                    >
+                        Delete
+                    </button>
+
+                `;
+
+
+                container.appendChild(card);
+
+            });
+
+        }
+
+
+
+        // OPEN GOOGLE MAPS
+
+        function openMap(location) {
+
+            let mapURL =
+                "https://www.google.com/maps/search/?api=1&query="
+                + encodeURIComponent(location);
+
+            window.open(mapURL, "_blank");
+
+        }
+
+
+
+        // DELETE WORKER
+
+        function deleteWorker(index) {
+
+            let workers =
+                JSON.parse(localStorage.getItem("workers")) || [];
+
+
+            workers.splice(index, 1);
+
+
+            localStorage.setItem(
+                "workers",
+                JSON.stringify(workers)
+            );
+
+
+            findWorkers();
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
